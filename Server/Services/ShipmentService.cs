@@ -11,4 +11,17 @@ public class ShipmentService: Shipment.ShipmentBase
             Result = true
         });
     }
+
+    public override async Task CheckExistsShipments(CheckExistsShipmentRequest request, IServerStreamWriter<CheckExistsShipmentResponse> responseStream, ServerCallContext context)
+    {
+        var count = 0;
+
+        while(count < 10)
+        {
+            count++;
+            await Task.Delay(100);
+            await responseStream.WriteAsync(new CheckExistsShipmentResponse() { IsExists = false });
+        }
+        await responseStream.WriteAsync(new CheckExistsShipmentResponse() { IsExists = true });
+    }
 }

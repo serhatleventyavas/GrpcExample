@@ -7,13 +7,25 @@ package shipments;
 message CreateShipmentRequest {
   int32 id = 1;
   string pickupAddress = 2;
-  string dropOffAddress = 3;
+  string dropOffAddress = 3;  
 }
 
 message CreateShipmentResponse {
   bool result = 1;
 }
 
+message CheckExistsShipmentRequest {
+	int32 id = 1;
+}
+
+message CheckExistsShipmentResponse {
+	bool isExists = 1;
+}
+
 service Shipment {
+  // unary api
   rpc Create(CreateShipmentRequest) returns (CreateShipmentResponse) {}
+
+  // server streaming
+  rpc CheckExistsShipments(CheckExistsShipmentRequest) returns (stream CheckExistsShipmentResponse) {}
 }
