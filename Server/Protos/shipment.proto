@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "Server";
+
+package shipments;
+
+message CreateShipmentRequest {
+  int32 id = 1;
+  string pickupAddress = 2;
+  string dropOffAddress = 3;  
+}
+
+message CreateShipmentResponse {
+  bool result = 1;
+}
+
+service Shipment {
+  rpc Create(CreateShipmentRequest) returns (CreateShipmentResponse) {}
+}
