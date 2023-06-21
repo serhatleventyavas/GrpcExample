@@ -13,6 +13,7 @@ public class Program
         var shipmentClient = new Shipment.ShipmentClient(channel);
         var calculatorClient = new Calculator.CalculatorClient(channel);
         var longGreetClient = new LongGreetService.LongGreetServiceClient(channel);
+        var computeAverageClient = new ComputeAverageApi.ComputeAverageApiClient(channel);
 
         var result = greeterClient.SayHello(new HelloRequest()
         {
@@ -63,6 +64,31 @@ public class Program
         await longGreetClientStream.RequestStream.CompleteAsync();
         var response = await longGreetClientStream.ResponseAsync;
         Console.WriteLine($"Long Greet reponse is -> {response.Result}");
+
+
+        var computeAverageStream = computeAverageClient.Compute();
+
+        var numbers = new List<int>
+        {
+            1,
+            2,
+            3,
+            4,
+            5
+        };
+
+        foreach (var number in numbers)
+        {
+            await computeAverageStream.RequestStream.WriteAsync(new ComputeAverageRequest
+            {
+                Number = number
+            });
+            await Task.Delay(500);
+        }
+
+        await computeAverageStream.RequestStream.CompleteAsync();
+        var computeAverageResponse = await computeAverageStream.ResponseAsync;
+        Console.WriteLine($"Average -> {computeAverageResponse.Result}");
 
         Console.ReadKey();
     }

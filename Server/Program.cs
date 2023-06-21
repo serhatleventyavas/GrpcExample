@@ -10,5 +10,6 @@ app.MapGrpcService<GreeterService>();
 app.MapGrpcService<ShipmentService>();
 app.MapGrpcService<CalculatorService>();
 app.MapGrpcService<LongGreetService>();
+app.MapGrpcService<ComputeAverageService>();
 
 app.Run();

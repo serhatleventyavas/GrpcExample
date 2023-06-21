@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option csharp_namespace = "Client";
+
+package computeAverage;
+
+message ComputeAverageRequest {
+  int32 number = 1;
+}
+
+message ComputeAverageResponse {
+  int32 result = 1;
+}
+
+
+service ComputeAverageApi {
+  rpc Compute(stream ComputeAverageRequest) returns (ComputeAverageResponse) {}
+}
+
