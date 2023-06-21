@@ -9,5 +9,6 @@ var app = builder.Build();
 app.MapGrpcService<GreeterService>();
 app.MapGrpcService<ShipmentService>();
 app.MapGrpcService<CalculatorService>();
+app.MapGrpcService<LongGreetService>();
 
 app.Run();

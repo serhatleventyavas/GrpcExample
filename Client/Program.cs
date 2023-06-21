@@ -12,6 +12,7 @@ public class Program
         var greeterClient = new Greeter.GreeterClient(channel);
         var shipmentClient = new Shipment.ShipmentClient(channel);
         var calculatorClient = new Calculator.CalculatorClient(channel);
+        var longGreetClient = new LongGreetService.LongGreetServiceClient(channel);
 
         var result = greeterClient.SayHello(new HelloRequest()
         {
@@ -42,6 +43,27 @@ public class Program
             Console.WriteLine($"Prime result is-> {primeValueResponse.ResponseStream.Current.Result}");
 
         }
+
+
+        var longGreetRequest = new LongGreetRequest()
+        {
+            Greet = new LongGreet()
+            {
+                FirstName = "Serhat Levent",
+                LastName = "Yavaş"
+            }
+        };
+
+        var longGreetClientStream = longGreetClient.LongGreet();
+        foreach (var index in Enumerable.Range(1, 100))
+        {
+            await longGreetClientStream.RequestStream.WriteAsync(longGreetRequest);
+        }
+
+        await longGreetClientStream.RequestStream.CompleteAsync();
+        var response = await longGreetClientStream.ResponseAsync;
+        Console.WriteLine($"Long Greet reponse is -> {response.Result}");
+
         Console.ReadKey();
     }
 }
