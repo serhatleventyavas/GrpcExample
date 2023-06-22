@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "Server";
+
+package maximumNumber;
+
+message MaximumNumberRequest {
+  int32 number = 1;
+}
+
+message MaximumNumberResponse {
+  int32 result = 1;
+}
+
+service MaximumNumberApi {
+  rpc GetMaximumNumber(stream MaximumNumberRequest) returns (stream MaximumNumberResponse) {}
+}

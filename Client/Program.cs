@@ -8,13 +8,16 @@ public class Program
     static async Task Main(string[] args)
     {
         var channel = GrpcChannel.ForAddress("http://localhost:5104");
-
+        /*
         var greeterClient = new Greeter.GreeterClient(channel);
         var shipmentClient = new Shipment.ShipmentClient(channel);
         var calculatorClient = new Calculator.CalculatorClient(channel);
         var longGreetClient = new LongGreetService.LongGreetServiceClient(channel);
         var computeAverageClient = new ComputeAverageApi.ComputeAverageApiClient(channel);
+        */
+        var maximumNumberClient = new MaximumNumberApi.MaximumNumberApiClient(channel);
 
+        /*
         var result = greeterClient.SayHello(new HelloRequest()
         {
             Name = "SLY Teknoloji ve Yazılım Hizmetleri Limited Şirketi"
@@ -89,7 +92,36 @@ public class Program
         await computeAverageStream.RequestStream.CompleteAsync();
         var computeAverageResponse = await computeAverageStream.ResponseAsync;
         Console.WriteLine($"Average -> {computeAverageResponse.Result}");
+        */
 
+        var maximumNumberStream = maximumNumberClient.GetMaximumNumber();
+
+        var maximumNumberResponseTask = Task.Run(async () =>
+        {
+            while (await maximumNumberStream.ResponseStream.MoveNext())
+            {
+                var maxNumber = maximumNumberStream.ResponseStream.Current.Result;
+                Console.WriteLine($"Maximum Number is: {maxNumber}");
+            }
+        });
+
+        var numbers = new List<int>()
+        {
+            1, 5, 3, 6, 2, 20
+        };
+
+        foreach (var number in numbers)
+        {
+            Console.WriteLine($"Sending number: {number}");
+            await maximumNumberStream.RequestStream.WriteAsync(new MaximumNumberRequest()
+            {
+                Number = number
+            });
+            await Task.Delay(500);
+        }
+
+        await maximumNumberStream.RequestStream.CompleteAsync();
+        await maximumNumberResponseTask;
         Console.ReadKey();
     }
 }
